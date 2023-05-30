@@ -8,6 +8,9 @@ app.get("/", (req,res) =>{
     res.render("index");
 });
 
+const apiRoute = require("./api");
+app.use("/api", apiRoute);
+
 app.listen(port, ()=> 
     console.log(`Server running at http://localhost:${port}`)
 );
