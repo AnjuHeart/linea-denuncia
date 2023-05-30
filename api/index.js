@@ -17,6 +17,10 @@ router.use('/paises', apiPaises);
 const apiEstados = require('./estados');
 router.use('/estados', apiEstados);
 
+//  RUTAS API PARA      DENUNCIAS
+const apiDenuncias = require('./denuncias');
+router.use('/denuncias', apiDenuncias);
+
 router.get('/*', (req,res) =>{
     res.status(400).send('Request not managed properly');
 });
