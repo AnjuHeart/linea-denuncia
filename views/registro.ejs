@@ -21,69 +21,113 @@
             </div>
         </nav>
     </header>
-    <main style="margin-left: 15px; margin-right: 15px;">
+    <main style="margin-left: 15px; margin-right: 15px; width: 800px;">
         <h1>Registro de nueva denuncia</h1>
 
-        <!-- DATOS DE DENUNCIA -->
-        <div id="datos-denuncia-div">
-            <h4>Datos de la denuncia</h4>
-            <a class="font-weight-bold">Organización o empresa</a><br>
-            <div class="mb-3" id="select-empresa"></div>
+        <form id="formularioDenuncia" action="api/denuncias" method="POST" onsubmit="return checkForm()">
 
-            <a class="font-weight-bold">País</a><br>
-            <div class="mb-3" id="select-pais"></div>
+            <!-- DATOS DE DENUNCIA -->
+            <div id="datos-denuncia-div">
+                <h4>Datos de la denuncia</h4>
+                <a class="font-weight-bold">Organización o empresa</a><br>
+                <div class="mb-3" id="select-empresa"></div>
 
-            <div id="estado-div" hidden>
-                <a class="font-weight-bold">Estado</a><br>
-                <div class="mb-3" id="select-estado"></div>
-            </div>
-            <button type="button" class="btn btn-secondary" onclick="siguienteForm()">Siguiente</button>
-        </div>
+                <a class="font-weight-bold">País</a><br>
+                <div class="mb-3" id="select-pais"></div>
 
-        <!-- DATOS DE CONTACTO -->
-        <div id="datos-contacto-div" hidden>
-            <h4>Datos de contacto</h4>
-            <a class="font-weight-bold">Quiero permanecer anónimo</a><br>
-
-            <div class="form-check">
-                <input class="form-check-input radio-mostrar" type="radio" name="anonimo" value="true" checked>
-                <label class="form-check-label">
-                    Sí
-                </label>
-            </div>
-            <div class="form-check mb-3">
-                <input class="form-check-input radio-mostrar" type="radio" name="anonimo" value="false">
-                <label class="form-check-label">
-                    No
-                </label>
+                <div id="estado-div" hidden>
+                    <a class="font-weight-bold">Estado</a><br>
+                    <div class="mb-3" id="select-estado"></div>
+                </div>
+                <button type="button" class="btn btn-secondary" onclick="siguienteForm()">Siguiente</button>
             </div>
 
-            <div id="datos-denunciante" class="mb-3" hidden>
+            <!-- DATOS DE CONTACTO -->
+            <div id="datos-contacto-div" hidden>
+                <h4>Datos de contacto</h4>
+                <a class="font-weight-bold">Quiero permanecer anónimo</a><br>
+
+                <div class="form-check">
+                    <input class="form-check-input radio-mostrar" type="radio" name="anonimo" value="true" checked>
+                    <label class="form-check-label">
+                        Sí
+                    </label>
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input radio-mostrar" type="radio" name="anonimo" value="false">
+                    <label class="form-check-label">
+                        No
+                    </label>
+                </div>
+
+                <!-- DENUNCIANTE NO ANONIMO SECCION -->
+                <div id="datos-denunciante" class="mb-3" hidden>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" style="width: 160px;">Nombre Completo</span>
+                        </div>
+                        <input type="text" class="form-control inputcontacto"
+                            placeholder="Introduzca su nombre completo..." name="nombre_denunciante">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" style="width: 160px;">Correo Electrónico</span>
+                        </div>
+                        <input type="email" class="form-control inputcontacto" placeholder="usuario@ejemplo.com"
+                            name="correo_denunciante">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" style="width: 160px;">Teléfono</span>
+                        </div>
+                        <input type="number" onKeyPress="if(this.value.length==10) return false;" minlength="10"
+                            class="form-control inputcontacto" placeholder="Ej. 6549890121 (10 dítitos)"
+                            name="telefono_denunciante">
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-secondary" onclick="anteriorForm()">Atras</button>
+                <button type="button" class="btn btn-secondary" onclick="ultimoForm()">Siguiente</button>
+            </div>
+
+            <!-- DETALLES DE DENUNCIA -->
+            <div id="detalles-denuncia" class="mb-3" hidden>
+                <h4>Detalles de la denuncia</h4>
+
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                      <span class="input-group-text" style="width: 160px;">Nombre Completo</span>
+                        <span class="input-group-text" style="width: 200px;">Detalles de la denuncia</span>
                     </div>
-                    <input type="text" class="form-control inputcontacto" placeholder="Introduzca su nombre completo..." name="nombre_denunciante">
-                  </div>
-                  <div class="input-group mb-3">
+                    <textarea class="form-control" name="detalles-text" required></textarea>
+                </div>
+
+                <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                      <span class="input-group-text" style="width: 160px;">Correo Electrónico</span>
+                        <span class="input-group-text" style="width: 200px;">Fecha del suceso</span>
                     </div>
-                    <input type="text" class="form-control inputcontacto" placeholder="usuario@ejemplo.com" name="correo_denunciante">
-                  </div>
-                  <div class="input-group mb-3">
+                    <input type="date" class="form-control" name="fecha" required>
+                </div>
+
+                <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                      <span class="input-group-text" style="width: 160px;">Teléfono</span>
+                        <span class="input-group-text" style="width: 200px;">Contraseña</span>
                     </div>
-                    <input type="text" class="form-control inputcontacto" placeholder="Ej. 6549890121" name="telefono_denunciante">
-                  </div>
+                    <input type="password" id="contrasena" class="form-control" name="contrasena" minlength="8"
+                        required>
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 200px;">Confirmar contraseña</span>
+                    </div>
+                    <input type="password" id="confirma-contra" class="form-control" name="confirma-contra"
+                        minlength="8" required>
+                </div>
+
+                <button type="button" class="btn btn-secondary" onclick="penultimoForm()">Atras</button>
+                <input type="submit" class="btn btn-primary" value="Enviar" onclick="checkForm()">
             </div>
-
-
-            <button type="button" class="btn btn-secondary" onclick="anteriorForm()">Atras</button>
-            <button type="button" class="btn btn-secondary" onclick="ultimoForm()">Siguiente</button>
-        </div>
-
+        </form>
     </main>
 </body>
 <script type="text/javascript">
@@ -176,23 +220,53 @@
         });
     }
 
-function siguienteForm(){
-    $('#datos-denuncia-div').prop('hidden',  true);
-    $('#datos-contacto-div').removeAttr('hidden');
-}
-function anteriorForm(){
-    $('#datos-contacto-div').prop('hidden',  true);
-    $('#datos-denuncia-div').removeAttr('hidden');
-}
+    function siguienteForm() {
+        $('#datos-denuncia-div').prop('hidden', true);
+        $('#datos-contacto-div').removeAttr('hidden');
+    }
+    function anteriorForm() {
+        $('#datos-contacto-div').prop('hidden', true);
+        $('#datos-denuncia-div').removeAttr('hidden');
+    }
 
-$('.radio-mostrar').change(function (){
-    if($(this).val() == "true"){
-        $('#datos-denunciante').attr('hidden', true);
+    function ultimoForm() {
+        $('#datos-contacto-div').prop('hidden', true);
+        $('#detalles-denuncia').removeAttr('hidden');
     }
-    else{
-        $('#datos-denunciante').removeAttr('hidden');
+
+    function penultimoForm() {
+        $('#detalles-denuncia').prop('hidden', true);
+        $('#datos-contacto-div').removeAttr('hidden');
     }
-});
+
+    $('.radio-mostrar').change(function () {
+        if ($(this).val() == "true") {
+            $('#datos-denunciante').attr('hidden', true);
+            $('.inputcontacto').removeAttr('required');
+        }
+        else {
+            $('#datos-denunciante').removeAttr('hidden');
+            $('.inputcontacto').prop("required", true);
+        }
+    });
+
+    function checkForm() {
+        if ($('input:required').each(function () {
+            if ($(this).val() == '') {
+                alert("Existen valores vacíos, favor de verificar el formulario");
+                return false;
+            }
+        }));
+        if (!$("input[name='empresa']:checked").val() || !$("input[name='pais']:checked").val() || !$("input[name='estado']:checked").val()) {
+            alert("Existen valores vacíos, favor de verificar el formulario");
+            return false;
+        }
+        if ($('#contrasena').val() != $('#confirma-contra').val()) {
+            alert("Contraseñas no coinciden");
+            return false;
+        }
+        return true;
+    }
 
 </script>
 
