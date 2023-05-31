@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <title>Registro</title>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand text-dark" href="/">
+                    Linea de Denuncias
+                </a>
+            </div>
+        </nav>
+    </header>
+    <main style="margin-left: 15px; margin-right: 15px;">
+        <h1>Registro de nueva denuncia</h1>
+
+        <!-- DATOS DE DENUNCIA -->
+        <div id="datos-denuncia-div">
+            <h4>Datos de la denuncia</h4>
+            <a class="font-weight-bold">Organización o empresa</a><br>
+            <div class="mb-3" id="select-empresa"></div>
+
+            <a class="font-weight-bold">País</a><br>
+            <div class="mb-3" id="select-pais"></div>
+
+            <div id="estado-div" hidden>
+                <a class="font-weight-bold">Estado</a><br>
+                <div class="mb-3" id="select-estado"></div>
+            </div>
+            <button type="button" class="btn btn-secondary" onclick="siguienteForm()">Siguiente</button>
+        </div>
+
+        <!-- DATOS DE CONTACTO -->
+        <div id="datos-contacto-div" hidden>
+            <h4>Datos de contacto</h4>
+            <a class="font-weight-bold">Quiero permanecer anónimo</a><br>
+
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="anonimo" checked>
+                <label class="form-check-label">
+                    Sí
+                </label>
+            </div>
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="radio" name="anonimo">
+                <label class="form-check-label">
+                    No
+                </label>
+            </div>
+
+            <div id="denunciante-datos-div mb-3" hidden>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" style="width: 160px;">Nombre Completo</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Introduzca su nombre completo..." name="nombre_denunciante">
+                  </div>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" style="width: 160px;">Correo Electrónico</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="usuario@ejemplo.com" name="correo_denunciante">
+                  </div>
+                  <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" style="width: 160px;">Teléfono</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Ej. 6549890121" name="telefono_denunciante">
+                  </div>
+            </div>
+
+
+            <button type="button" class="btn btn-secondary" onclick="anteriorForm()">Atras</button>
+            <button type="button" class="btn btn-secondary" onclick="ultimoForm()">Siguiente</button>
+        </div>
+
+    </main>
+</body>
+<script type="text/javascript">
+    var empresasArray = [];
+    var paisesArray = [];
+    var estadosArray = [];
+
+    //OBTENER EMPRESAS Y DATOS ACTUALES
+    $(document).ready(function () {
+        fetch('api/empresas')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(row => {
+                    empresasArray.push({
+                        id: row.id,
+                        empresa: row.empresa
+                    });
+                });
+                popularEmpresas();
+            });
+        fetch('api/paises')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(row => {
+                    paisesArray.push({
+                        id: row.id,
+                        pais: row.pais
+                    });
+                });
+                fetch('api/estados')
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(row => {
+                            estadosArray.push({
+                                id: row.id,
+                                pais: row.pais_key,
+                                estado: row.estado
+                            });
+                        });
+                    });
+                popularPaises();
+            });
+
+    });
+
+    //GENERA RADIO BUTTONS EMPRESAS
+    function popularEmpresas() {
+        empresasArray.forEach(empresa => {
+            $('#select-empresa').append($
+                (`<div class="form-check">
+                <input required class="form-check-input" type="radio" name="empresa"value="`+ empresa.id + `">
+                    <label class="form-check-label">
+                        ` + empresa.empresa + `
+                    </label>
+                </div>`
+                ));
+        });
+    }
+
+    //GENERA RADIO BUTTONS PAISES
+    function popularPaises() {
+        paisesArray.forEach(pais => {
+            $('#select-pais').append($
+                (`<div class="form-check">
+                <input required class="form-check-input radio-pais" type="radio" name="pais"value="`+ pais.id + `">
+                    <label class="form-check-label">
+                        ` + pais.pais + `
+                    </label>
+                </div>`
+                ));
+        });
+
+        //GENERA Y ACTUALIZA RADIO BUTTONS ESTADOS
+        $('.radio-pais').change(function () {
+            $('#select-estado').empty();
+            estadosArray.forEach(estado => {
+                if (estado.pais == $(this).val()) {
+                    $('#select-estado').append($
+                        (`<div class="form-check">
+                    <input required class="form-check-input" type="radio" name="estado"value="`+ estado.id + `">
+                        <label class="form-check-label">
+                            ` + estado.estado + `
+                        </label>
+                    </div>`
+                        ));
+                }
+            });
+
+            $("#estado-div").removeAttr('hidden');
+        });
+    }
+
+function siguienteForm(){
+    $('#datos-denuncia-div').prop('hidden',  true);
+    $('#datos-contacto-div').removeAttr('hidden');
+}
+function anteriorForm(){
+    $('#datos-contacto-div').prop('hidden',  true);
+    $('#datos-denuncia-div').removeAttr('hidden');
+}
+
+
+</script>
+
+</html>
