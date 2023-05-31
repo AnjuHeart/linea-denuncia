@@ -46,36 +46,36 @@
             <a class="font-weight-bold">Quiero permanecer anónimo</a><br>
 
             <div class="form-check">
-                <input class="form-check-input" type="radio" name="anonimo" checked>
+                <input class="form-check-input radio-mostrar" type="radio" name="anonimo" value="true" checked>
                 <label class="form-check-label">
                     Sí
                 </label>
             </div>
             <div class="form-check mb-3">
-                <input class="form-check-input" type="radio" name="anonimo">
+                <input class="form-check-input radio-mostrar" type="radio" name="anonimo" value="false">
                 <label class="form-check-label">
                     No
                 </label>
             </div>
 
-            <div id="denunciante-datos-div mb-3" hidden>
+            <div id="datos-denunciante" class="mb-3" hidden>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text" style="width: 160px;">Nombre Completo</span>
                     </div>
-                    <input type="text" class="form-control" placeholder="Introduzca su nombre completo..." name="nombre_denunciante">
+                    <input type="text" class="form-control inputcontacto" placeholder="Introduzca su nombre completo..." name="nombre_denunciante">
                   </div>
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text" style="width: 160px;">Correo Electrónico</span>
                     </div>
-                    <input type="text" class="form-control" placeholder="usuario@ejemplo.com" name="correo_denunciante">
+                    <input type="text" class="form-control inputcontacto" placeholder="usuario@ejemplo.com" name="correo_denunciante">
                   </div>
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
                       <span class="input-group-text" style="width: 160px;">Teléfono</span>
                     </div>
-                    <input type="text" class="form-control" placeholder="Ej. 6549890121" name="telefono_denunciante">
+                    <input type="text" class="form-control inputcontacto" placeholder="Ej. 6549890121" name="telefono_denunciante">
                   </div>
             </div>
 
@@ -185,6 +185,14 @@ function anteriorForm(){
     $('#datos-denuncia-div').removeAttr('hidden');
 }
 
+$('.radio-mostrar').change(function (){
+    if($(this).val() == "true"){
+        $('#datos-denunciante').attr('hidden', true);
+    }
+    else{
+        $('#datos-denunciante').removeAttr('hidden');
+    }
+});
 
 </script>
 
