@@ -18,7 +18,7 @@
     <header>
         <nav class="navbar bg-light">
             <div class="container-fluid">
-                <a class="navbar-brand text-dark" href="/admin">
+                <a class="navbar-brand text-dark" href="#" onclick="logout(); return false;">
                     Linea de Denuncias - Portal Admin
                 </a>
             </div>
@@ -218,6 +218,16 @@
             error: function (error) {
                 alert("Ocurrió un error en la base de datos");
                 throw new Error(error);
+            }
+        });
+    }
+
+    function logout(){
+        $.ajax({
+            type: "POST",
+            url: "/logout",
+            success: function(){
+                window.location.replace("/admin")
             }
         });
     }

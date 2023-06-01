@@ -43,6 +43,13 @@ app.post("/admin", passport.authenticate('local', {
     failureRedirect: "/admin"
 }));
 
+app.post("/logout", (req,res) =>{
+    req.logout(function(err) {
+        if (err) { return next(err); }
+        res.status(200).send("Redirect");
+      });
+})
+
 app.get('/portalAdmin', checkAuthenticated, (req, res) =>{
     res.render("portalAdmin");
 });
