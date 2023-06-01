@@ -40,12 +40,6 @@
             </tbody>
         </table>
 
-
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary" onclick="showModal()">
-            Launch demo modal
-        </button>
-
         <!-- Modal -->
         <div class="modal fade bd-example-modal-lg" id="modalDenuncia" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -55,19 +49,24 @@
                     </div>
 
                     <div class="modal-body">
+                        <!-- SECCION CONTACTO-->
                         <div id="seccion-contacto">
 
                         </div>
                         <hr>
-                        <div id="seccion-detalles">
-
-                        </div>
-                        <hr>
+                        <!-- SECCION COMENTARIOS-->
                         <h5 class="modal-title" id="comentarioTitulo">Historial de comentarios</h5>
                         <ul id="seccion-comentarios">
 
                         </ul>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Agregar nuevo comentario...">
+                            <div class="input-group-append">
+                              <button class="btn btn-outline-secondary" type="button">Agregar comentario</button>
+                            </div>
+                          </div>
                         <hr>
+                        <!-- SECCION ESTADO-->
                         <h5 class="modal-title" id="estadoTitulo">Estado de la denuncia</h5>
                         <div id="seccion-estado">
 
@@ -140,6 +139,8 @@
         const denuncia = denuncias.find(denuncia => denuncia.folio === folio);
         $('#folioTitulo').text("Folio:" + denuncia.folio);
         $('#seccion-contacto').empty();
+        $('#seccion-comentarios').empty();
+        $('#seccion-estado').empty();
 
         if (denuncia.denunciante != "") {
             $('#seccion-contacto').append(`
@@ -166,6 +167,12 @@
                 `);
             });
         });
+
+        denuncia.comentarios.forEach(comentario => {
+            $('#seccion-comentarios').append(`<li><b>${comentario}</b></li>`);
+            console.log(comentario);
+        });
+
         showModal();
     }
 
