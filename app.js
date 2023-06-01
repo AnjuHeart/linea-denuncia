@@ -15,6 +15,10 @@ app.get("/registro" , (req,res) =>{
     res.render("registro");
 });
 
+app.get("/seguimiento", (req,res) =>{
+    res.render("seguimiento");
+});
+
 const apiRoute = require("./api");
 app.use("/api", apiRoute);
 

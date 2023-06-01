@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 
-//GET TODOS LAS EMPRESAS
+//GET TODOS LAS DENUNCIA
 router.get('/', (req, res) => {
     db.any("SELECT * FROM denuncias ORDER BY id ASC")
         .then(rows => {
@@ -13,12 +13,25 @@ router.get('/', (req, res) => {
         });
 });
 
-//GET UNA SOLA EMPRESA
-router.get('/:id', (req, res) => {
-    const id = req.params.id
-    db.any("SELECT * FROM denuncias WHERE id = $1", [id])
+//GET UNA SOLA DENUNCIA
+router.get('/:folio', (req, res) => {
+    const folio = req.params.folio;
+
+    let { contrasena } = req.query;
+
+    db.any("SELECT * FROM denuncias WHERE folio = $1", [folio])
         .then(rows => {
-            res.json(rows);
+            if(rows[0].contrasena == contrasena){
+                const data = {
+                    folio: folio,
+                    detalles: rows[0].detalles,
+                    estado: rows[0].estado,
+                    comentarios: rows[0].comentarios
+                }
+                res.status(200).send(data);
+            } else{
+                res.status(401).send("La contraseña no es correcta");
+            }
         })
         .catch(error => {
             res.status(500).send(error);

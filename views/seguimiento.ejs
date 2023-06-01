@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <title>Seguimiento de denuncia existente</title>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand text-dark" href="/">
+                    Linea de Denuncias
+                </a>
+            </div>
+        </nav>
+    </header>
+    <main style="margin-left: 15px; margin-right: 15px; width: 800px;">
+        <h1>Seguimiento de denuncia</h1>
+        <form id="formBusqueda" action="/api/denuncias" method="POST">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="width: 200px;">Introduzca el folio</span>
+                </div>
+                <input type="text" id="folio" class="form-control" name="folio" placeholder="Número de 5 dígitos"
+                    maxlength="5" minlength="5" required>
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="width: 200px;">Introduzca la contraseña</span>
+                </div>
+                <input type="password" id="contrasena" class="form-control" name="contrasena"
+                    placeholder="Al menos 8 caracteres..." minlength="8" required>
+            </div>
+            <input type="submit" class="btn btn-primary" value="Buscar denuncia">
+        </form>
+    </main>
+</body>
+
+<script type="text/javascript">
+    $("#formBusqueda").submit(function (e) {
+        e.preventDefault();
+        var form = $(this);
+        const folio = $('#folio').val();
+        const newAction = "/api/denuncias/" + folio;
+        $.ajax({
+            type: "GET",
+            url: newAction,
+            data: form.serialize(),
+            success: function (response) {
+                alert("ESTA FUE LA RESPUESTA:\n"+ response);
+            },
+            error: function (error) {
+                alert(error.responseText);
+            }
+        });
+    });
+</script>
+
+</html>
