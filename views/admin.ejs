@@ -23,15 +23,15 @@
     </header>
     <main style="margin-left: 15px; margin-right: 15px; width: 800px;">
         <h1>Inicio de sesion</h1>
-        <form>
+        <form action="/admin" method="post">
             <div class="form-group">
                 <label>Usuario</label>
                 <input type="text" class="form-control" required id="usuarioInput"
-                    placeholder="Introduzca el nombre de usuario">
+                    placeholder="Introduzca el nombre de usuario" name="username">
             </div>
             <div class="form-group">
                 <label>Contraseña</label>
-                <input type="password" class="form-control" required id="contrasenaInput" placeholder="Conraseña">
+                <input type="password" class="form-control" required id="contrasenaInput" placeholder="Conraseña" name="password">
             </div>
             <button type="submit" class="btn btn-primary">Iniciar sesion</button>
         </form>
