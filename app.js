@@ -43,8 +43,20 @@ app.post("/admin", passport.authenticate('local', {
     failureRedirect: "/admin"
 }));
 
+app.get('/portalAdmin', checkAuthenticated, (req, res) =>{
+    res.render("portalAdmin");
+});
+
 const apiRoute = require("./api");
 app.use("/api", apiRoute);
+
+//FUNCION MIDDLEWARE PARA AUTENTICACION
+function checkAuthenticated(req, res, next){
+    if(req.isAuthenticated()){
+        return next();
+    }
+    res.redirect('/admin');
+}
 
 app.listen(port, ()=> 
     console.log(`Server running at http://localhost:${port}`)
