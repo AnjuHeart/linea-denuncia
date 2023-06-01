@@ -24,7 +24,7 @@
     <main style="margin-left: 15px; margin-right: 15px; width: 800px;">
         <h1>Registro de nueva denuncia</h1>
 
-        <form id="formularioDenuncia" action="api/denuncias" method="POST" onsubmit="return checkForm()">
+        <form id="formularioDenuncia" action="api/denuncias" method="POST">
 
             <!-- DATOS DE DENUNCIA -->
             <div id="datos-denuncia-div">
@@ -39,6 +39,14 @@
                     <a class="font-weight-bold">Estado</a><br>
                     <div class="mb-3" id="select-estado"></div>
                 </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 200px;">Número de centro</span>
+                    </div>
+                    <input type="number" id="numcentro" class="form-control" name="num_centro" required>
+                </div>
+
                 <button type="button" class="btn btn-secondary" onclick="siguienteForm()">Siguiente</button>
             </div>
 
@@ -98,7 +106,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width: 200px;">Detalles de la denuncia</span>
                     </div>
-                    <textarea class="form-control" name="detalles-text" required></textarea>
+                    <textarea class="form-control" name="detalles_text" required></textarea>
                 </div>
 
                 <div class="input-group mb-3">
@@ -120,8 +128,8 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width: 200px;">Confirmar contraseña</span>
                     </div>
-                    <input type="password" id="confirma-contra" class="form-control" name="confirma-contra"
-                        minlength="8" required>
+                    <input type="password" id="confirma-contra" class="form-control" name="confirm_contra" minlength="8"
+                        required>
                 </div>
 
                 <button type="button" class="btn btn-secondary" onclick="penultimoForm()">Atras</button>
@@ -266,6 +274,29 @@
             return false;
         }
         return true;
+    }
+
+    $('#formularioDenuncia').submit(function (e) {
+        e.preventDefault();
+        if (checkForm() == true) {
+            var form = $(this);
+            var actionUrl = form.attr('action');
+
+            $.ajax({
+                type: "POST",
+                url: actionUrl,
+                data: form.serialize(),
+            })
+            .then(folio=>{
+                redireccionYMensaje(folio);
+            })
+        }
+    });
+
+    function redireccionYMensaje(folio){
+        alert("El folio generado es: " + folio + "\n Será redireccionado en 5 segundos");
+        var delay = 5000; 
+        setTimeout(function(){ window.location = "/"; }, delay);
     }
 
 </script>
