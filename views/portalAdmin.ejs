@@ -55,6 +55,10 @@
                     </div>
 
                     <div class="modal-body">
+                        <div id="seccion-contacto">
+
+                        </div>
+                        <hr>
                         <div id="seccion-detalles">
 
                         </div>
@@ -84,52 +88,85 @@
     var denuncias = [];
     $(document).ready(function () {
         fetch('api/denuncias')
-        .then(response => response.json())
-        .then(data =>{
-            data.forEach(row => {
-                denuncias.push({
-                    id: row.id,
-                    empresa: row.empresa_key,
-                    pais: row.pais_key,
-                    estado: row.estado_key,
-                    folio: row.folio,
-                    fecha: row.fecha_evento,
-                    detalles: row.detalles,
-                    estatus: row.estado,
-                    comentarios: row.comentarios,
-                    denunciante: row.denunciante_nombre,
-                    correo: row.denunciante_correo,
-                    telefono: row.denunciante_telefono,
-                    centro: row.numero_centro
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(row => {
+                    denuncias.push({
+                        id: row.id,
+                        empresa: row.empresa_key,
+                        pais: row.pais_key,
+                        estado: row.estado_key,
+                        folio: row.folio,
+                        fecha: row.fecha_evento,
+                        detalles: row.detalles,
+                        estatus: row.estado,
+                        comentarios: row.comentarios,
+                        denunciante: row.denunciante_nombre,
+                        correo: row.denunciante_correo,
+                        telefono: row.denunciante_telefono,
+                        centro: row.numero_centro
+                    });
                 });
+                popularTablaDenuncias();
             });
-            popularTablaDenuncias();
-        });
     });
 
     function showModal() {
         $('#modalDenuncia').modal('show');
     }
 
-    function popularTablaDenuncias(){
-        denuncias.forEach(denuncia =>{
+    function cerrarPop(){
+        $('#modalDenuncia').modal('hide');
+    }
+
+    function popularTablaDenuncias() {
+        denuncias.forEach(denuncia => {
             fetch(`api/empresas/${denuncia.empresa}`)
-            .then(response => response.json())
-            .then(data =>{
-                $('#denuncias-body').append(`
+                .then(response => response.json())
+                .then(data => {
+                    $('#denuncias-body').append(`
                 <tr>
                     <th scope="row">${denuncia.folio}</th>
                     <td>${data[0].empresa}</td>
-                    <td>${denuncia.denunciante == ""? "Anónimo": denuncia.denunciante}</td>
-                    <td><button type="button" class="btn btn-primary" onclick="MostrarDetalles(${denuncia.folio})">Ver Detalles</button></td>
+                    <td>${denuncia.denunciante == "" ? "Anónimo" : denuncia.denunciante}</td>
+                    <td><button type="button" class="btn btn-primary" onclick="MostrarDetalles('${denuncia.folio}', '${data[0].empresa}')">Ver Detalles</button></td>
                 </tr>
             `)
-            });
+                });
         });
     }
 
-    function MostrarDetalles(folio){
-        showModal();    
+    function MostrarDetalles(folio, empresa) {
+        const denuncia = denuncias.find(denuncia => denuncia.folio === folio);
+        $('#folioTitulo').text("Folio:" + denuncia.folio);
+        $('#seccion-contacto').empty();
+
+        if (denuncia.denunciante != "") {
+            $('#seccion-contacto').append(`
+            <h6>Contacto</h6>
+            <p><b>Por:</b> ${denuncia.denunciante}.    <b>@mail:</b> ${denuncia.correo}   <b>Teléfono:</b> ${denuncia.telefono}</p>`);
+        }else{
+            $('#seccion-contacto').append(`
+            <p><b>Por:</b> Anónimo</p>`);
+        }
+        $('#seccion-contacto').append(`
+            <h6>Detalles</h6>
+            <a>${denuncia.detalles}</a><br>
+            <a><b>Fecha del Incidente: </b>${new Date(denuncia.fecha).toDateString()}</a><br>
+            <a><b>Lugar del Incidente: </b> <i id="ubicacionDiv"><i></a>`);
+        
+        fetch(`api/paises/${denuncia.pais}`)
+        .then(response => response.json())
+        .then(data =>{
+            fetch(`api/estados/${denuncia.estado}`)
+            .then(respuesta => respuesta.json())
+            .then(datos => {
+                $('#ubicacionDiv').append(`
+                    ${empresa}, ${datos[0].estado}, ${data[0].pais}
+                `);
+            });
+        });
+        showModal();
     }
 
 </script>
