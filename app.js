@@ -10,13 +10,18 @@ app.get("/", (req,res) =>{
     res.render("index");
 });
 
-//RUTAS PARA REGISTRO
+//RUTAS PARA DENUNCIANTE
 app.get("/registro" , (req,res) =>{
     res.render("registro");
 });
 
 app.get("/seguimiento", (req,res) =>{
     res.render("seguimiento");
+});
+
+//RUTAS PARA ADMIN
+app.get("/admin",(req,res) =>{
+    res.render("admin");
 });
 
 const apiRoute = require("./api");
