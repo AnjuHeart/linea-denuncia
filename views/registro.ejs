@@ -286,17 +286,20 @@
                 type: "POST",
                 url: actionUrl,
                 data: form.serialize(),
-            })
-            .then(folio=>{
-                redireccionYMensaje(folio);
+                success: function(response){
+                    redireccionYMensaje(response);
+                },
+                error: function(error){
+                    throw new Error(error);
+                }
             })
         }
     });
 
-    function redireccionYMensaje(folio){
+    function redireccionYMensaje(folio) {
         alert("El folio generado es: " + folio + "\n Será redireccionado en 5 segundos");
-        var delay = 5000; 
-        setTimeout(function(){ window.location = "/"; }, delay);
+        var delay = 5000;
+        setTimeout(function () { window.location = "/"; }, delay);
     }
 
 </script>
