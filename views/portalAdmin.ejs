@@ -60,17 +60,21 @@
 
                         </ul>
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="Agregar nuevo comentario...">
+                            <input type="text" class="form-control" id="nuevoComentario"
+                                placeholder="Agregar nuevo comentario...">
                             <div class="input-group-append">
-                              <button class="btn btn-outline-secondary" type="button">Agregar comentario</button>
+                                <button class="btn btn-outline-secondary" type="button" id="botonAgregar">Agregar
+                                    comentario</button>
                             </div>
-                          </div>
+                        </div>
                         <hr>
                         <!-- SECCION ESTADO-->
                         <h5 class="modal-title" id="estadoTitulo">Estado de la denuncia</h5>
                         <div id="seccion-estado">
 
                         </div>
+                        <button type="button" class="btn btn-primary">Finalizar Denuncia</button>
+                        <button type="button" class="btn btn-danger">Cancelar Denuncia</button>
                     </div>
 
                     <div class="modal-footer">
@@ -114,7 +118,7 @@
         $('#modalDenuncia').modal('show');
     }
 
-    function cerrarPop(){
+    function cerrarPop() {
         $('#modalDenuncia').modal('hide');
     }
 
@@ -146,7 +150,7 @@
             $('#seccion-contacto').append(`
             <h6>Contacto</h6>
             <p><b>Por:</b> ${denuncia.denunciante}.    <b>@mail:</b> ${denuncia.correo}   <b>Teléfono:</b> ${denuncia.telefono}</p>`);
-        }else{
+        } else {
             $('#seccion-contacto').append(`
             <p><b>Por:</b> Anónimo</p>`);
         }
@@ -155,25 +159,48 @@
             <a>${denuncia.detalles}</a><br>
             <a><b>Fecha del Incidente: </b>${new Date(denuncia.fecha).toDateString()}</a><br>
             <a><b>Lugar del Incidente: </b> <i id="ubicacionDiv"><i></a>`);
-        
+
         fetch(`api/paises/${denuncia.pais}`)
-        .then(response => response.json())
-        .then(data =>{
-            fetch(`api/estados/${denuncia.estado}`)
-            .then(respuesta => respuesta.json())
-            .then(datos => {
-                $('#ubicacionDiv').append(`
+            .then(response => response.json())
+            .then(data => {
+                fetch(`api/estados/${denuncia.estado}`)
+                    .then(respuesta => respuesta.json())
+                    .then(datos => {
+                        $('#ubicacionDiv').append(`
                     ${empresa}, ${datos[0].estado}, ${data[0].pais}
                 `);
+                    });
             });
-        });
 
         denuncia.comentarios.forEach(comentario => {
             $('#seccion-comentarios').append(`<li><b>${comentario}</b></li>`);
             console.log(comentario);
         });
 
+        $('#botonAgregar').attr('onclick', `agregarComentario('${folio}')`);
+
+        $('#seccion-estado').append(`<a><b>${denuncia.estatus}</></a>`);
+
+
+
         showModal();
+    }
+
+    function agregarComentario(folio) {
+        var nuevoComentario = $('#nuevoComentario').val();
+        $.ajax({
+            type: "PUT",
+            url: "/api/denuncias/comentario",
+            data: { folio: folio, comentario: nuevoComentario },
+            success: function (response) {
+                $('#seccion-comentarios').append(`<li><b>${response}</b></li>`);
+                $('#nuevoComentario').val('');
+            },
+            error: function (error) {
+                alert("Ocurrió un error en la base de datos");
+                throw new Error(error);
+            }
+        });
     }
 
 </script>
