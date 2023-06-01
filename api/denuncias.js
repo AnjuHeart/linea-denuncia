@@ -74,6 +74,7 @@ router.post('/', (req, res) => {
         });
 });
 
+// RUTA PARA AGREGAR COMENTARIOS
 router.put('/comentario', checkAuthenticated, (req, res) => {
     let { folio, comentario } = req.body;
     var comentarios = [];
@@ -96,6 +97,20 @@ router.put('/comentario', checkAuthenticated, (req, res) => {
         .catch(error =>{
             res.status(500).send(error);
         });
+});
+
+//RUTA PARA ACTUALIZAR ESTADO
+router.put('/estado', checkAuthenticated, (req,res) =>{
+    let {folio, nuevoEstado} = req.body;
+    db.any(`UPDATE denuncias
+    SET estado=$1
+    WHERE folio= $2;`, [nuevoEstado, folio])
+    .then(response =>{
+        res.status(200).send(response);
+    })
+    .catch(error=>{
+        res.status(500).send(error);
+    });
 });
 
 //FUNCION MIDDLEWARE PARA AUTENTICACION

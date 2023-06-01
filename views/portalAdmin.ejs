@@ -33,6 +33,7 @@
                     <th scope="col">Folio</th>
                     <th scope="col">Empresa</th>
                     <th scope="col">Denunciane</th>
+                    <th scope="col">Estado</th>
                     <th scope="col">Detalles</th>
                 </tr>
             </thead>
@@ -73,8 +74,8 @@
                         <div id="seccion-estado">
 
                         </div>
-                        <button type="button" class="btn btn-primary">Finalizar Denuncia</button>
-                        <button type="button" class="btn btn-danger">Cancelar Denuncia</button>
+                        <button type="button" class="btn btn-primary" id="finalizaDenuncia">Finalizar Denuncia</button>
+                        <button type="button" class="btn btn-danger" id="cancelaDenuncia">Cancelar Denuncia</button>
                     </div>
 
                     <div class="modal-footer">
@@ -127,14 +128,17 @@
             fetch(`api/empresas/${denuncia.empresa}`)
                 .then(response => response.json())
                 .then(data => {
-                    $('#denuncias-body').append(`
-                <tr>
-                    <th scope="row">${denuncia.folio}</th>
-                    <td>${data[0].empresa}</td>
-                    <td>${denuncia.denunciante == "" ? "Anónimo" : denuncia.denunciante}</td>
-                    <td><button type="button" class="btn btn-primary" onclick="MostrarDetalles('${denuncia.folio}', '${data[0].empresa}')">Ver Detalles</button></td>
-                </tr>
-            `)
+                    if (denuncia.estatus == "En proceso") {
+                        $('#denuncias-body').append(`
+                        <tr>
+                            <th scope="row">${denuncia.folio}</th>
+                            <td>${data[0].empresa}</td>
+                            <td>${denuncia.denunciante == "" ? "Anónimo" : denuncia.denunciante}</td>
+                            <td>${denuncia.estatus}</td>
+                            <td><button type="button" class="btn btn-primary" onclick="MostrarDetalles('${denuncia.folio}', '${data[0].empresa}')">Ver Detalles</button></td>
+                        </tr>
+                    `);
+                    }
                 });
         });
     }
@@ -174,14 +178,14 @@
 
         denuncia.comentarios.forEach(comentario => {
             $('#seccion-comentarios').append(`<li><b>${comentario}</b></li>`);
-            console.log(comentario);
         });
 
         $('#botonAgregar').attr('onclick', `agregarComentario('${folio}')`);
 
         $('#seccion-estado').append(`<a><b>${denuncia.estatus}</></a>`);
 
-
+        $('#finalizaDenuncia').attr('onclick', `actualizaEstado('${folio}', 'Finalizada')`);
+        $('#cancelaDenuncia').attr('onclick', `actualizaEstado('${folio}', 'Cancelada')`);
 
         showModal();
     }
@@ -195,6 +199,21 @@
             success: function (response) {
                 $('#seccion-comentarios').append(`<li><b>${response}</b></li>`);
                 $('#nuevoComentario').val('');
+            },
+            error: function (error) {
+                alert("Ocurrió un error en la base de datos");
+                throw new Error(error);
+            }
+        });
+    }
+
+    function actualizaEstado(folio, nuevoEstado) {
+        $.ajax({
+            type: "PUT",
+            url: "/api/denuncias/estado",
+            data: { folio: folio, nuevoEstado: nuevoEstado },
+            success: function (response) {
+                location.reload();
             },
             error: function (error) {
                 alert("Ocurrió un error en la base de datos");
