@@ -228,6 +228,7 @@
         });
     }
 
+    // FUNCIONES DE CAMBIO DE PESTAÑA
     function siguienteForm() {
         $('#datos-denuncia-div').prop('hidden', true);
         $('#datos-contacto-div').removeAttr('hidden');
@@ -258,6 +259,8 @@
         }
     });
 
+    //VALIDAR INPUTS NO VISIBLES
+
     function checkForm() {
         if ($('input:required').each(function () {
             if ($(this).val() == '') {
@@ -276,6 +279,7 @@
         return true;
     }
 
+    // MANEJO DE RESPUESTA DEL SERVIDOR CON AJAX
     $('#formularioDenuncia').submit(function (e) {
         e.preventDefault();
         if (checkForm() == true) {

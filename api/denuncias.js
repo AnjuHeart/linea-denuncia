@@ -21,6 +21,9 @@ router.get('/:folio', (req, res) => {
 
     db.any("SELECT * FROM denuncias WHERE folio = $1", [folio])
         .then(rows => {
+            if(rows.length == 0){
+                return res.status(404).send("El folio no existe");
+            }
             if(rows[0].contrasena == contrasena){
                 const data = {
                     folio: folio,
