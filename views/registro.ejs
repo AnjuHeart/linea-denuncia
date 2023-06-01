@@ -7,6 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
         integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+        crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <title>Registro</title>
 </head>
@@ -136,6 +139,23 @@
                 <input type="submit" class="btn btn-primary" value="Enviar" onclick="checkForm()">
             </div>
         </form>
+
+        <!-- MODAL POP UP-->
+        <div class="modal fade" id="popFolio" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">El folio generado es</h5>
+                    </div>
+                    <div class="modal-body">
+                        <h2 id="folioGenerado"></h2>
+                    </div>
+                    <div class="modal-footer">
+                        <h5>El formulario se cerrará en 5 segundos</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 </body>
 <script type="text/javascript">
@@ -290,10 +310,10 @@
                 type: "POST",
                 url: actionUrl,
                 data: form.serialize(),
-                success: function(response){
+                success: function (response) {
                     redireccionYMensaje(response);
                 },
-                error: function(error){
+                error: function (error) {
                     throw new Error(error);
                 }
             });
@@ -301,9 +321,14 @@
     });
 
     function redireccionYMensaje(folio) {
-        alert("El folio generado es: " + folio + "\n Será redireccionado en 5 segundos");
+        $('#folioGenerado').text(folio);
+        mostrarPop();
         var delay = 5000;
         setTimeout(function () { window.location = "/"; }, delay);
+    }
+
+    function mostrarPop(){
+        $('#popFolio').modal("show");
     }
 
 </script>
